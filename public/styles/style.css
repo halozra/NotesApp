@@ -1,0 +1,117 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    font-family: sans-serif;
+    background: rgb(238,174,202);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+}
+
+.conatiner{
+    height: 100vh;
+    width: 200px;
+}
+
+.unlist{
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    padding-left: 10px;
+    gap: 20px;
+    list-style: none;
+    max-height: 100vh;
+}
+
+.list-item{
+    border-style: none;
+    height: 50px;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+}
+
+.list-item:hover{
+    background-color: orange;
+}
+
+.unlist button{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.NotesApp{
+    padding-top: 50px;
+}
+
+.NotesApp button{
+    margin-left: 50px;
+    margin-top: 50px;
+    background: rgb(238,174,202);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+}
+.NotesApp button img{
+    width: 50px;
+}
+
+h1{
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+    color: white;
+
+}
+
+h1 img{
+    height: 60px;
+}
+
+.NotesContent{
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 20px;
+}
+
+.NotesContent_style{
+    flex-direction: column;
+    display: flex;
+    width: 250px;
+    height: 300px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+
+.NotesContent_style p{
+    flex: 1;
+    margin: 0;
+    overflow:hidden;
+}
+
+.NotesContent_style button{
+    align-self: flex-end;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+
+.NotesContent_style button svg{
+    width: 30px;
+    height: 30px;
+}
