@@ -23,13 +23,8 @@
 
     <!-- Main Content -->
     <main class="content">
-        <!-- Header -->
         <header class="header">
-            <h1>NotesApp</h1>
-            <form action="/add" method="post" class="add-note-form">
-                <input type="text" name="content" placeholder="Ketikan catatan di sini..." required>
-                <button type="submit" class="add-note-btn">+ Tambah Catatan</button>
-            </form>
+            <h1>Secret</h1>
         </header>
 
         <!-- Notes Container -->
@@ -38,12 +33,9 @@
                 <div class="note-card">
                     <p class="note-text" contenteditable="true"><%= datas.content %></p>
                     <div class="btn">
-                        <form action="/delete/<%= datas.id %>?_method=DELETE" method="post">
-                            <button type="submit" class="delete-btn">🗑 Hapus</button>
-                        </form>
-                        <form action="/arsip/add" method="post">
+                        <form action="/arsip/undo" method="post">
                             <input type="hidden" name="id" value="<%= datas.id %>">
-                            <button type="submit" class="btn-arsip">Arsip</button>
+                            <button type="submit" class="btn-arsip">Arsip undo</button>
                         </form>
                     </div>
 

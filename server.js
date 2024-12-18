@@ -1,46 +1,108 @@
-import express, { urlencoded } from "express"
-import {v4 as uuidv4} from "uuid"
+import express from "express";
+import { v4 as uuidv4 } from "uuid";
+import methodOverride from "method-override";
+import pool from './db.js';
+import bodyParser from "body-parser";
 
 const app = express();
 const port = 3000;
 
-app.use(express.static("public"))
-app.set(express.urlencoded({extended:true}))
-app.set("view engine", "ejs")
+app.use(express.static("public"));
+app.use(methodOverride("_method"));
+app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(bodyParser.json());
 
 
-let data = [];
-
-app.get("/",(req,res)=>{
-    res.render("index",{data:data})
-})
-
-app.post("/newNotes",(req,res)=>{
-    let newData = {create:req.body.text ||"Typing Here...",id:uuidv4()
+// Halaman utama, menampilkan catatan
+app.get("/", async(req, res) => {
+    try {
+        const data = await pool.query("SELECT * FROM notes")
+        res.render("index", { data: data.rows });
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Internal Server Error");
     }
-    data.push(newData)
-    res.redirect("/")
-})
 
-// Route PUT untuk memperbarui catatan
-app.put("/newNotes/:id", (req, res) => {
-    const noteId = req.params.id;
-    const updatedContent = req.body.content;
-
-    // Cari catatan berdasarkan ID
-    const note = data.find(n => n.id === noteId);
-    if (note) {
-        note.content = updatedContent; // Perbarui konten catatan
-        res.json({ success: true, note });
-    } else {
-        res.status(404).json({ success: false, message: "Note not found." });
-    }
 });
 
+// Menambahkan catatan baru
+app.post("/add", async(req, res) => {
+    try {
+        const id = uuidv4()
+        const content = req.body.content;
+        await pool.query("INSERT INTO notes(id,content) VALUES($1,$2)",[id,content])
+        console.log(req.body);
+        res.redirect("/"); // Pastikan hanya satu respons yang dikirim
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Failed to add note");
 
+    }
 
+});
 
-app.listen(port,()=>{
-    console.log(`Server running at port ${port}`)
+app.delete("/delete/:id", async(req,res)=>{
+    try {
+        const id = req.params.id;
+        await pool.query("DELETE FROM notes WHERE id=$1",[id])
+        res.redirect("/");
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Failed to delete note");
+    }
 })
+
+app.get("/arsip", async(req, res) => {
+    try {
+        const data = await pool.query("SELECT * FROM arsip")
+        res.render("arsip", { data: data.rows });
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Internal Server Error");
+    }
+
+});
+
+app.post("/arsip/add", async(req, res) => {
+    try {
+        const {id} = req.body;
+        const contentQuery = await pool.query("SELECT content FROM notes WHERE id=$1",[id])
+        if(contentQuery.rows.length >0){
+            const content = contentQuery.rows[0].content;
+            await pool.query("INSERT INTO arsip(id,content) VALUES($1,$2)",[id,content])
+            await pool.query("DELETE FROM notes WHERE id=$1",[id])
+            console.log("data berhasil di kirim")
+        }
+        res.redirect('/');
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Failed to add note");
+
+
+
+    }
+
+});
+
+app.post("/arsip/undo", async (req,res)=>{
+    try {
+        const {id}= req.body;
+        const contentQuery = await pool.query("SELECT content FROM arsip WHERE id=$1",[id])
+        if(contentQuery.rows.length>0){
+            const content = contentQuery.rows[0].content;
+            await pool.query("INSERT INTO notes(id,content) VALUES($1,$2)",[id,content])
+            await pool.query('DELETE FROM arsip WHERE id=$1',[id])
+            console.log('Data berhasil di undo')
+        }
+        res.redirect("/")
+    } catch (error) {
+        console.error(error)
+        res.status(500).send("Failed to add note");
+    }
+})
+
+app.listen(port, () => {
+    console.log(`Server running at port ${port}`);
+});
