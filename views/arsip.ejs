@@ -31,7 +31,7 @@
         <section class="notes-container">
             <% data.forEach((datas) => { %>
                 <div class="note-card">
-                    <p class="note-text" contenteditable="true"><%= datas.content %></p>
+                    <p class="note-text" contenteditable="false"><%= datas.content %></p>
                     <div class="btn">
                         <form action="/arsip/undo" method="post">
                             <input type="hidden" name="id" value="<%= datas.id %>">

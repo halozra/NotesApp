@@ -35,15 +35,16 @@
         <!-- Notes Container -->
         <section class="notes-container">
             <% data.forEach((datas) => { %>
-                <div class="note-card">
+                <div class="note-card" data-id="<%= datas.id %>" >
                     <p class="note-text" contenteditable="true"><%= datas.content %></p>
-                    <div class="btn">
+                    <div class="btn" >
                         <form action="/delete/<%= datas.id %>?_method=DELETE" method="post">
                             <button type="submit" class="delete-btn">🗑 Hapus</button>
                         </form>
                         <form action="/arsip/add" method="post">
                             <input type="hidden" name="id" value="<%= datas.id %>">
                             <button type="submit" class="btn-arsip">Arsip</button>
+
                         </form>
                     </div>
 
@@ -53,6 +54,6 @@
     </main>
 
     <!-- Scripts -->
-    <script src="/scripts/script.js"></script>
+    <script src="/styles/script.js"></script>
 </body>
 </html>

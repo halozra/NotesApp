@@ -43,6 +43,24 @@ app.post("/add", async(req, res) => {
 
 });
 
+app.put("/update/:id", async (req, res) => {
+    const { content } = req.body;
+    const id = req.params.id;
+
+    if (!id || !content) {
+        return res.status(400).send("Invalid input: ID or content missing.");
+    }
+
+    try {
+        await pool.query("UPDATE notes SET content = $1 WHERE id = $2", [content, id]);
+        res.status(200).send("Note updated successfully");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Failed to update note");
+    }
+});
+
+
 app.delete("/delete/:id", async(req,res)=>{
     try {
         const id = req.params.id;
